@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
+// @ts-ignore: Allow side-effect CSS import without type declarations
 import "./globals.css";
 
 // تفعيل الخط العربي

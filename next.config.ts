@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    // التحذيرات (Warnings) مش هتوقف الـ Build
+    // هنتجاهل الـ Linting تماماً أثناء الـ Build عشان ميعطلناش
     ignoreDuringBuilds: true,
   },
 };
