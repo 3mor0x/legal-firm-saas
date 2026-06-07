@@ -213,9 +213,9 @@ export default function UltraPremiumLawPortal() {
                 ))}
               </ul>
               <div className="p-5 bg-gradient-to-br from-amber-500/10 to-transparent rounded-2xl border border-amber-500/20">
-                <p className="text-amber-400 font-medium leading-relaxed italic">
-  “نقدّم استشارات قانونية احترافية ودفاعاً متيناً يحفظ ويصون حقوق موكلينا.”
-</p>
+              <p className="text-amber-400 font-medium leading-relaxed italic">
+            &quot;نقدّم استشارات قانونية احترافية ودفاعاً متيناً يحفظ ويصون حقوق موكلينا.&quot;
+          </p>
               </div>
             </div>
           </div>
