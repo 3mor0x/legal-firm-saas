@@ -47,7 +47,7 @@ export default function UltraPremiumLawPortal() {
         <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-amber-400 transition-colors group">
             <MapPin className="w-4 h-4 text-amber-500 group-hover:animate-bounce" />
-            <span>أسيوط - ديروط - ميدان ابوجبل - فوق مطعم العجمي</span>
+            <span>أسيوط - ديروط - ميدان أبوجبل - أعلي مطعم العجمي</span>
           </a>
           <div className="flex items-center gap-6">
             <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors flex items-center gap-2">

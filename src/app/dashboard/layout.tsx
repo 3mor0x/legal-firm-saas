@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
@@ -14,36 +15,63 @@ import {
   Bell, 
   Search,
   Menu,
-  ChevronDown
+  ChevronDown,
+  Archive,
+  X
 } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  
+  // حالة (State) للتحكم في ظهور واختفاء القائمة في الموبايل
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const sidebarLinks = [
     { name: "اللوحة الرئيسية", href: "/dashboard", icon: LayoutDashboard },
     { name: "إدارة القضايا", href: "/dashboard/cases", icon: Briefcase },
     { name: "سجل الموكلين", href: "/dashboard/clients", icon: Users },
     { name: "الجلسات والمواعيد", href: "/dashboard/sessions", icon: CalendarClock },
+    { name: "الأرشيف الرقمي", href: "/dashboard/archive", icon: Archive },
     { name: "الماليات والفواتير", href: "/dashboard/invoices", icon: FileText },
     { name: "إعدادات النظام", href: "/dashboard/settings", icon: Settings },
   ];
 
   return (
-    <div dir="rtl" className="min-h-screen bg-[#F8FAFC] flex font-sans selection:bg-amber-500/30">
+    <div dir="rtl" className="min-h-screen bg-[#F8FAFC] flex font-sans selection:bg-amber-500/30 relative">
       
-      {/* 1. القائمة الجانبية (Sidebar) - تم تغيير المسمى لاسم الأستاذ محمود مباشرة */}
-      <aside className="w-72 bg-[#040814] border-l border-slate-800/80 hidden md:flex flex-col fixed top-0 right-0 h-full z-20 shadow-2xl">
+      {/* خلفية ضبابية (Backdrop) تظهر في الموبايل لما القائمة تفتح */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-[#040814]/40 backdrop-blur-sm z-40 md:hidden transition-opacity"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* 1. القائمة الجانبية (Sidebar) - أنيميشن سحب سلس للموبايل */}
+      <aside 
+        className={`w-72 bg-[#040814] border-l border-slate-800/80 flex flex-col fixed top-0 right-0 h-full z-50 shadow-2xl transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"} md:translate-x-0`}
+      >
         
-        {/* تم حذف كلمة نظام النخبة وحطيت اسم الصرح القانوني للأستاذ محمود */}
-        <div className="h-24 flex items-center gap-3.5 px-6 border-b border-slate-800/60">
-          <div className="p-2.5 bg-gradient-to-br from-amber-500/20 to-transparent rounded-xl border border-amber-500/20">
-            <Scale className="w-6 h-6 text-amber-400" />
+        {/* هيدر القائمة */}
+        <div className="h-24 flex items-center justify-between px-6 border-b border-slate-800/60">
+          <div className="flex items-center gap-3.5">
+            <div className="p-2.5 bg-gradient-to-br from-amber-500/20 to-transparent rounded-xl border border-amber-500/20">
+              <Scale className="w-6 h-6 text-amber-400" />
+            </div>
+            <div>
+              <h2 className="text-white font-black text-base tracking-tight leading-tight">المنصة الرقمية</h2>
+              <p className="text-amber-500 text-xs font-bold mt-1">مكتب أ. محمود شعبان</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-white font-black text-base tracking-tight leading-tight">المنصة الرقمية</h2>
-            <p className="text-amber-500 text-xs font-bold mt-1">مكتب أ. محمود شعبان</p>
-          </div>
+
+          {/* زرار الإغلاق (يظهر في الموبايل فقط) */}
+          <button 
+            className="md:hidden p-2 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* الروابط */}
@@ -56,6 +84,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link 
                 key={link.name} 
                 href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)} // إغلاق القائمة أوتوماتيك عند الضغط على أي رابط في الموبايل
                 className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group relative ${
                   isActive 
                     ? "bg-gradient-to-l from-amber-500/10 to-transparent text-amber-500 font-bold" 
@@ -89,7 +118,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* الـ Spacer السحري لمنع تداخل المحتوى */}
+      {/* الـ Spacer لمنع تداخل المحتوى في شاشات الكمبيوتر */}
       <div className="hidden md:block w-72 shrink-0"></div>
 
       {/* 2. منطقة المحتوى والـ الجزء الشمال من الهيدر */}
@@ -100,7 +129,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           
           {/* اليمين: زرار الموبايل وشريط البحث */}
           <div className="flex items-center gap-4">
-            <button className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+            <button 
+              className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              onClick={() => setIsMobileMenuOpen(true)} // الزرار ده دلوقتي بيفتح القائمة
+            >
               <Menu className="w-6 h-6" />
             </button>
             <div className="hidden md:flex items-center gap-2.5 bg-slate-100/80 border border-slate-200 rounded-xl px-4 py-2.5 w-96 focus-within:ring-2 ring-amber-500/20 focus-within:border-amber-500/50 transition-all">
@@ -113,9 +145,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
 
-          {/* الشمال: تم تعديله وتفخيمه بالكامل (قائمة تفاعلية للبروفايل والكبسولات) */}
+          {/* الشمال: قائمة تفاعلية للبروفايل والكبسولات */}
           <div className="flex items-center gap-4">
-            {/* زرار الإشعارات المطور */}
             <button className="relative p-2.5 bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 rounded-xl transition-all shadow-sm group">
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
               <Bell className="w-4 h-4 group-hover:rotate-12 transition-transform" />
@@ -123,7 +154,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             
             <div className="w-px h-6 bg-slate-200"></div>
 
-            {/* كبسولة البروفايل الشيك جداً في أقصى الشمال */}
             <div className="flex items-center gap-3 bg-white border border-slate-200/80 rounded-xl p-1.5 pl-3 pr-2 shadow-sm hover:border-slate-300 transition-all cursor-pointer group">
               <div className="w-8 h-8 rounded-lg bg-[#040814] text-amber-400 flex items-center justify-center font-bold text-xs shadow-md">
                 م
